@@ -30,7 +30,7 @@ const getMsgInfo = amount => amount < 0 ?
 const App = () => {
   const [selectFriend, setSelectFriend] = useState(null)
 
-  const handleClickFriend = friend => setSelectFriend(friend)
+  const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
 
   return (
     <>
@@ -43,6 +43,7 @@ const App = () => {
             {
               friends.map(friend => {
                 const { color, message } = getMsgInfo(friend.amount)
+                const isSelectFriend = friend.id === selectFriend?.id
                 return (
                   <li key={friend.id}>
                     <img src={friend.img} alt={`Foto de ${friend.name}`} />
@@ -50,9 +51,11 @@ const App = () => {
                     <p className={color}>{message}</p>
                     <button
                       onClick={() => handleClickFriend(friend)}
-                      className="button"
+                      className={`button ${isSelectFriend ? 'button-close' : ''}`}
                     >
-                      Selecionar
+                      {
+                        isSelectFriend ? 'Fechar' : 'Selecionar'
+                      }
                     </button>
                   </li>
                 )
@@ -61,33 +64,29 @@ const App = () => {
           </ul>
           <button className="button">Adicionar Amigo(a)</button>
         </div>
-        <div>
-          <form className="form-split-bill">
-            <h2>
-              {
-                selectFriend ?
-                  `Rache a conta com ${selectFriend.name}` :
-                  `Rache a conta com um amigo`
-              }
-            </h2>
-            <label>
-              💰 Valor total
-              <input type="number" defaultValue={100} />
-            </label>
-            <label>
-              🤸‍♂️ Seus gastos
-              <input type="number" defaultValue={50} />
-            </label>
-            <label>
-              🤑 Quem vai pagar
-              <select>
-                <option value="you">Você</option>
-                <option value={selectFriend}>{selectFriend && selectFriend.name}</option>
-              </select>
-            </label>
-            <button className="button">Rachar conta</button>
-          </form>
-        </div>
+        {selectFriend &&
+          <div>
+            <form className="form-split-bill">
+              <h2>{`Rache a conta com ${selectFriend?.name}`}</h2>
+              <label>
+                💰 Valor total
+                <input type="number" defaultValue={100} />
+              </label>
+              <label>
+                🤸‍♂️ Seus gastos
+                <input type="number" defaultValue={50} />
+              </label>
+              <label>
+                🤑 Quem vai pagar
+                <select>
+                  <option value="you">Você</option>
+                  <option value={selectFriend}>{selectFriend?.name}</option>
+                </select>
+              </label>
+              <button className="button">Rachar conta</button>
+            </form>
+          </div>
+        }
       </main>
     </>
   )
