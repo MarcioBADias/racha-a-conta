@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 const friends = [
   {
     id: crypto.randomUUID(),
@@ -26,6 +28,9 @@ const getMsgInfo = amount => amount < 0 ?
     { message: 'Estamos quites', color: 'white-neutral' }
 
 const App = () => {
+  const [selectFriend, setSelectFriend] = useState(null)
+
+  const handleClickFriend = friend => setSelectFriend(friend)
 
   return (
     <>
@@ -43,7 +48,12 @@ const App = () => {
                     <img src={friend.img} alt={`Foto de ${friend.name}`} />
                     <h3>{friend.name}</h3>
                     <p className={color}>{message}</p>
-                    <button className="button">Selecionar</button>
+                    <button
+                      onClick={() => handleClickFriend(friend)}
+                      className="button"
+                    >
+                      Selecionar
+                    </button>
                   </li>
                 )
               })
@@ -53,7 +63,13 @@ const App = () => {
         </div>
         <div>
           <form className="form-split-bill">
-            <h2>Rache a conta com _NOME_</h2>
+            <h2>
+              {
+                selectFriend ?
+                  `Rache a conta com ${selectFriend.name}` :
+                  `Rache a conta com um amigo`
+              }
+            </h2>
             <label>
               💰 Valor total
               <input type="number" defaultValue={100} />
@@ -66,7 +82,7 @@ const App = () => {
               🤑 Quem vai pagar
               <select>
                 <option value="you">Você</option>
-                <option value="_NOME_">_NOME_</option>
+                <option value={selectFriend}>{selectFriend && selectFriend.name}</option>
               </select>
             </label>
             <button className="button">Rachar conta</button>
