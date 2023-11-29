@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const friends = [
+const initialFriends = [
   {
     id: crypto.randomUUID(),
     name: 'Henrique',
@@ -28,9 +28,28 @@ const getMsgInfo = amount => amount < 0 ?
     { message: 'Estamos quites', color: 'white-neutral' }
 
 const App = () => {
+  const [friends, setFriends] = useState(initialFriends)
   const [selectFriend, setSelectFriend] = useState(null)
+  const [totalBill, setTotalBill] = useState('100')
+  const [mySend, setMySend] = useState('50')
+  const [whoWillPay, setWhoWillPay] = useState('you')
 
   const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
+  const handleChangeBill = e => setTotalBill(e.target.value)
+  const handleChangeMySend = e => setMySend(e.target.value)
+  const handleChangeWhoWillPay = e => setWhoWillPay(e.target.value)
+
+  const handleSubmitShareBill = e => {
+    e.preventDefault()
+    setFriends(prev => prev.map(friend => selectFriend === friend.id ?
+      {
+        ...friend,
+        balance: whoWillPay === 'you' ?
+          friend.balance + (+totalBill - +mySend) :
+          friend.balance - mySend
+      } : friend
+    ))
+  }
 
   return (
     <>
@@ -41,7 +60,7 @@ const App = () => {
         <div className="sidebar">
           <ul>
             {
-              friends.map(friend => {
+              initialFriends.map(friend => {
                 const { color, message } = getMsgInfo(friend.amount)
                 const isSelectFriend = friend.id === selectFriend?.id
                 return (
@@ -66,19 +85,19 @@ const App = () => {
         </div>
         {selectFriend &&
           <div>
-            <form className="form-split-bill">
+            <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
               <h2>{`Rache a conta com ${selectFriend?.name}`}</h2>
               <label>
                 💰 Valor total
-                <input type="number" defaultValue={100} />
+                <input type="number" value={totalBill} onChange={handleChangeBill} />
               </label>
               <label>
                 🤸‍♂️ Seus gastos
-                <input type="number" defaultValue={50} />
+                <input type="number" value={mySend} onChange={handleChangeMySend} />
               </label>
               <label>
                 🤑 Quem vai pagar
-                <select>
+                <select value={whoWillPay} onChange={handleChangeWhoWillPay}>
                   <option value="you">Você</option>
                   <option value={selectFriend}>{selectFriend?.name}</option>
                 </select>
