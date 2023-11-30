@@ -41,12 +41,12 @@ const App = () => {
 
   const handleSubmitShareBill = e => {
     e.preventDefault()
-    setFriends(prev => prev.map(friend => selectFriend === friend.id ?
+    setFriends(prev => prev.map(friend => selectFriend.id === friend.id ?
       {
         ...friend,
-        balance: whoWillPay === 'you' ?
-          friend.balance + (+totalBill - +mySend) :
-          friend.balance - mySend
+        amount: whoWillPay === 'you' ?
+          friend.amount + (+totalBill - +mySend) :
+          friend.amount - mySend
       } : friend
     ))
   }
@@ -60,7 +60,7 @@ const App = () => {
         <div className="sidebar">
           <ul>
             {
-              initialFriends.map(friend => {
+              friends.map(friend => {
                 const { color, message } = getMsgInfo(friend.amount)
                 const isSelectFriend = friend.id === selectFriend?.id
                 return (
