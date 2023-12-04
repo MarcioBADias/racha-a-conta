@@ -87,13 +87,28 @@ const App = () => {
               })
             }
           </ul>
+
+          {showFormAddFriend && <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
+            <label>
+              👥 Nome
+              <input type="text" />
+            </label>
+            <label>
+              📸 Foto
+              <input />
+            </label>
+            <button className="button">Adicionar</button>
+          </form>
+          }
+
           <button
             className={`button ${showFormAddFriend ? 'button-close' : ''}`}
             onClick={handleClickAddFriend}
           >
-            Adicionar Amigo(a)
+            {showFormAddFriend ? 'Fechar' : 'Adicionar Amigo(a)'}
           </button>
         </div>
+
         {selectFriend &&
           <div>
             <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
