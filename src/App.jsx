@@ -33,7 +33,9 @@ const App = () => {
   const [totalBill, setTotalBill] = useState('')
   const [mySend, setMySend] = useState('')
   const [whoWillPay, setWhoWillPay] = useState('you')
+  const [showFormAddFriend, setShowFormAddFriend] = useState(false)
 
+  const handleClickAddFriend = () => setShowFormAddFriend(b => !b)
   const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
   const handleChangeBill = e => setTotalBill(e.target.value)
   const handleChangeMySend = e => setMySend(e.target.value)
@@ -85,8 +87,28 @@ const App = () => {
               })
             }
           </ul>
-          <button className="button">Adicionar Amigo(a)</button>
+
+          {showFormAddFriend && <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
+            <label>
+              👥 Nome
+              <input type="text" />
+            </label>
+            <label>
+              📸 Foto
+              <input />
+            </label>
+            <button className="button">Adicionar</button>
+          </form>
+          }
+
+          <button
+            className={`button ${showFormAddFriend ? 'button-close' : ''}`}
+            onClick={handleClickAddFriend}
+          >
+            {showFormAddFriend ? 'Fechar' : 'Adicionar Amigo(a)'}
+          </button>
         </div>
+
         {selectFriend &&
           <div>
             <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
