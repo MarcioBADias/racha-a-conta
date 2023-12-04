@@ -33,7 +33,9 @@ const App = () => {
   const [totalBill, setTotalBill] = useState('')
   const [mySend, setMySend] = useState('')
   const [whoWillPay, setWhoWillPay] = useState('you')
+  const [showFormAddFriend, setShowFormAddFriend] = useState(false)
 
+  const handleClickAddFriend = () => setShowFormAddFriend(b => !b)
   const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
   const handleChangeBill = e => setTotalBill(e.target.value)
   const handleChangeMySend = e => setMySend(e.target.value)
@@ -85,7 +87,12 @@ const App = () => {
               })
             }
           </ul>
-          <button className="button">Adicionar Amigo(a)</button>
+          <button
+            className={`button ${showFormAddFriend ? 'button-close' : ''}`}
+            onClick={handleClickAddFriend}
+          >
+            Adicionar Amigo(a)
+          </button>
         </div>
         {selectFriend &&
           <div>
