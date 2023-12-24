@@ -1,4 +1,10 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react"
+import { Logo } from "./components/Logo"
+import { ListOfItens } from "./components/ListOfItens"
+import { FormAddFriend } from "./components/FormAddFriend"
+import { FormSelectFriend } from "./components/FormSelectFriend"
+import { ButtonAddFriend } from "./components/ButtonAddFriend"
 
 const initialFriends = [
   {
@@ -21,117 +27,47 @@ const initialFriends = [
   }
 ]
 
-const getMsgInfo = amount => amount < 0 ?
-  { message: `você deve ${Math.abs(amount)} reais`, color: 'red-debit' } :
-  amount > 0 ?
-    { message: `te devo ${amount} reais`, color: 'green-credit' } :
-    { message: 'Estamos quites', color: 'white-neutral' }
-
 const App = () => {
   const [friends, setFriends] = useState(initialFriends)
   const [selectFriend, setSelectFriend] = useState(null)
-  const [totalBill, setTotalBill] = useState('')
-  const [mySend, setMySend] = useState('')
-  const [whoWillPay, setWhoWillPay] = useState('you')
   const [showFormAddFriend, setShowFormAddFriend] = useState(false)
 
   const handleClickAddFriend = () => setShowFormAddFriend(b => !b)
   const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
-  const handleChangeBill = e => setTotalBill(e.target.value)
-  const handleChangeMySend = e => setMySend(e.target.value)
-  const handleChangeWhoWillPay = e => setWhoWillPay(e.target.value)
 
-  const handleSubmitShareBill = e => {
-    e.preventDefault()
-    setFriends(prev => prev.map(friend => selectFriend.id === friend.id ?
-      {
-        ...friend,
-        amount: whoWillPay === 'you' ?
-          friend.amount + (+totalBill - +mySend) :
-          friend.amount - mySend
-      } : friend
-    ))
+  const handleSubmitShareBill = friend => {
+    setFriends(prev => prev.map(p => friend.id === p.id ? friend : p))
     setSelectFriend(null)
-    setTotalBill('')
-    setMySend('')
-    setWhoWillPay('you')
+  }
+
+  const handleSubmitAddFriend = friend => {
+    setFriends(prev => [...prev, friend])
+    setShowFormAddFriend(false)
   }
 
   return (
     <>
-      <header className="header">
-        <img src="logo-racha-conta.png" alt="Logo e Titulo: Racha a conta" />
-      </header>
+      <Logo />
       <main className="app">
-        <div className="sidebar">
-          <ul>
-            {
-              friends.map(friend => {
-                const { color, message } = getMsgInfo(friend.amount)
-                const isSelectFriend = friend.id === selectFriend?.id
-                return (
-                  <li key={friend.id}>
-                    <img src={friend.img} alt={`Foto de ${friend.name}`} />
-                    <h3>{friend.name}</h3>
-                    <p className={color}>{message}</p>
-                    <button
-                      onClick={() => handleClickFriend(friend)}
-                      className={`button ${isSelectFriend ? 'button-close' : ''}`}
-                    >
-                      {
-                        isSelectFriend ? 'Fechar' : 'Selecionar'
-                      }
-                    </button>
-                  </li>
-                )
-              })
-            }
-          </ul>
-
-          {showFormAddFriend && <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
-            <label>
-              👥 Nome
-              <input type="text" />
-            </label>
-            <label>
-              📸 Foto
-              <input />
-            </label>
-            <button className="button">Adicionar</button>
-          </form>
-          }
-
-          <button
-            className={`button ${showFormAddFriend ? 'button-close' : ''}`}
-            onClick={handleClickAddFriend}
-          >
-            {showFormAddFriend ? 'Fechar' : 'Adicionar Amigo(a)'}
-          </button>
-        </div>
-
-        {selectFriend &&
-          <div>
-            <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
-              <h2>{`Rache a conta com ${selectFriend?.name}`}</h2>
-              <label>
-                💰 Valor total
-                <input type="number" value={totalBill} onChange={handleChangeBill} />
-              </label>
-              <label>
-                🤸‍♂️ Seus gastos
-                <input type="number" value={mySend} onChange={handleChangeMySend} />
-              </label>
-              <label>
-                🤑 Quem vai pagar
-                <select value={whoWillPay} onChange={handleChangeWhoWillPay}>
-                  <option value="you">Você</option>
-                  <option value={selectFriend}>{selectFriend?.name}</option>
-                </select>
-              </label>
-              <button className="button">Rachar conta</button>
-            </form>
-          </div>
-        }
+        <aside className="sidebar">
+          <ListOfItens
+            friends={friends}
+            selectFriend={selectFriend}
+            onClickFriend={handleClickFriend}
+          />
+          <FormAddFriend
+            showFormAddFriend={showFormAddFriend}
+            onSubmitAddFriend={handleSubmitAddFriend}
+          />
+          <ButtonAddFriend
+            showFormAddFriend={showFormAddFriend}
+            onClickAddFriend={handleClickAddFriend}
+          />
+        </aside>
+        <FormSelectFriend
+          selectFriend={selectFriend}
+          onSubmitShareBill={handleSubmitShareBill}
+        />
       </main>
     </>
   )
