@@ -4,6 +4,7 @@ import { Logo } from "./components/Logo"
 import { ListOfItens } from "./components/ListOfItens"
 import { FormAddFriend } from "./components/FormAddFriend"
 import { FormSelectFriend } from "./components/FormSelectFriend"
+import { ButtonAddFriend } from "./components/ButtonAddFriend"
 
 const initialFriends = [
   {
@@ -98,12 +99,10 @@ const App = () => {
             onSubmitAddFriend={handleSubmitAddFriend}
           />
 
-          <button
-            className={`button ${showFormAddFriend ? 'button-close' : ''}`}
-            onClick={handleClickAddFriend}
-          >
-            {showFormAddFriend ? 'Fechar' : 'Adicionar Amigo(a)'}
-          </button>
+          <ButtonAddFriend
+            showFormAddFriend={showFormAddFriend}
+            onClickAddFriend={handleClickAddFriend}
+          />
         </aside>
 
         <FormSelectFriend
