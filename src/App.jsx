@@ -34,12 +34,16 @@ const App = () => {
   const [mySend, setMySend] = useState('')
   const [whoWillPay, setWhoWillPay] = useState('you')
   const [showFormAddFriend, setShowFormAddFriend] = useState(false)
+  const [nameOfFriend, setNameOfFriend] = useState('')
+  const [imgOfFriend, setImgOfFriend] = useState('')
 
   const handleClickAddFriend = () => setShowFormAddFriend(b => !b)
   const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
   const handleChangeBill = e => setTotalBill(e.target.value)
   const handleChangeMySend = e => setMySend(e.target.value)
   const handleChangeWhoWillPay = e => setWhoWillPay(e.target.value)
+  const handleChangeNameOfFriend = e => setNameOfFriend(e.target.value)
+  const handleChangeImgOfFriend = e => setImgOfFriend(e.target.value)
 
   const handleSubmitShareBill = e => {
     e.preventDefault()
@@ -48,13 +52,31 @@ const App = () => {
         ...friend,
         amount: whoWillPay === 'you' ?
           friend.amount + (+totalBill - +mySend) :
-          friend.amount - mySend
+          friend.amount - +mySend
       } : friend
     ))
     setSelectFriend(null)
     setTotalBill('')
     setMySend('')
     setWhoWillPay('you')
+  }
+
+  const handleSubmitAddFriend = e => {
+    e.preventDefault()
+
+    setFriends(prev => [
+      ...prev,
+      {
+        id: crypto.randomUUID,
+        name: nameOfFriend,
+        amount: 0,
+        img: imgOfFriend
+      }
+    ])
+
+    setNameOfFriend('')
+    setImgOfFriend('')
+    setShowFormAddFriend(false)
   }
 
   return (
@@ -91,13 +113,18 @@ const App = () => {
           {showFormAddFriend && <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
             <label>
               👥 Nome
-              <input type="text" />
+              <input value={nameOfFriend} onChange={handleChangeNameOfFriend} />
             </label>
             <label>
               📸 Foto
-              <input />
+              <input value={imgOfFriend} onChange={handleChangeImgOfFriend} />
             </label>
-            <button className="button">Adicionar</button>
+            <button
+              className="button"
+              onClick={handleSubmitAddFriend}
+            >
+              Adicionar
+            </button>
           </form>
           }
 
