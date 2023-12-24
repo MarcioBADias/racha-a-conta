@@ -30,52 +30,18 @@ const initialFriends = [
 const App = () => {
   const [friends, setFriends] = useState(initialFriends)
   const [selectFriend, setSelectFriend] = useState(null)
-  const [totalBill, setTotalBill] = useState('')
-  const [mySend, setMySend] = useState('')
-  const [whoWillPay, setWhoWillPay] = useState('you')
   const [showFormAddFriend, setShowFormAddFriend] = useState(false)
-  const [nameOfFriend, setNameOfFriend] = useState('')
-  const [imgOfFriend, setImgOfFriend] = useState('')
 
   const handleClickAddFriend = () => setShowFormAddFriend(b => !b)
   const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
-  const handleChangeBill = e => setTotalBill(e.target.value)
-  const handleChangeMySend = e => setMySend(e.target.value)
-  const handleChangeWhoWillPay = e => setWhoWillPay(e.target.value)
-  const handleChangeNameOfFriend = e => setNameOfFriend(e.target.value)
-  const handleChangeImgOfFriend = e => setImgOfFriend(e.target.value)
 
-  const handleSubmitShareBill = e => {
-    e.preventDefault()
-    setFriends(prev => prev.map(friend => selectFriend.id === friend.id ?
-      {
-        ...friend,
-        amount: whoWillPay === 'you' ?
-          friend.amount + (+totalBill - +mySend) :
-          friend.amount - +mySend
-      } : friend
-    ))
+  const handleSubmitShareBill = friend => {
+    setFriends(prev => prev.map(p => friend.id === p.id ? friend : p))
     setSelectFriend(null)
-    setTotalBill('')
-    setMySend('')
-    setWhoWillPay('you')
   }
 
-  const handleSubmitAddFriend = e => {
-    e.preventDefault()
-
-    setFriends(prev => [
-      ...prev,
-      {
-        id: crypto.randomUUID,
-        name: nameOfFriend,
-        amount: 0,
-        img: imgOfFriend
-      }
-    ])
-
-    setNameOfFriend('')
-    setImgOfFriend('')
+  const handleSubmitAddFriend = friend => {
+    setFriends(prev => [...prev, friend])
     setShowFormAddFriend(false)
   }
 
@@ -89,30 +55,17 @@ const App = () => {
             selectFriend={selectFriend}
             onClickFriend={handleClickFriend}
           />
-
           <FormAddFriend
             showFormAddFriend={showFormAddFriend}
-            nameOfFriend={nameOfFriend}
-            imgOfFriend={imgOfFriend}
-            onCHangeNameOfFriends={handleChangeNameOfFriend}
-            onChangeImgOfFriends={handleChangeImgOfFriend}
             onSubmitAddFriend={handleSubmitAddFriend}
           />
-
           <ButtonAddFriend
             showFormAddFriend={showFormAddFriend}
             onClickAddFriend={handleClickAddFriend}
           />
         </aside>
-
         <FormSelectFriend
           selectFriend={selectFriend}
-          totalBill={totalBill}
-          mySend={mySend}
-          whoWillPay={whoWillPay}
-          onChangeBill={handleChangeBill}
-          onChangeMySend={handleChangeMySend}
-          onChangeWhoWillPay={handleChangeWhoWillPay}
           onSubmitShareBill={handleSubmitShareBill}
         />
       </main>
