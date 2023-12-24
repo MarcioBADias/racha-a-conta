@@ -2,7 +2,14 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 
-const FormAddFriend = ({ nameOfFriend, imgOfFriend, onSubmitAddFriend, onCHangeNameOfFriends, onChangeImgOfFriends }) => (
+const FormAddFriend = ({
+    showFormAddFriend,
+    nameOfFriend,
+    imgOfFriend,
+    onSubmitAddFriend,
+    onCHangeNameOfFriends,
+    onChangeImgOfFriends
+}) => showFormAddFriend &&
     <form className="form-split-bill" onSubmit={onSubmitAddFriend}>
         <label>
             👥 Nome
@@ -16,6 +23,5 @@ const FormAddFriend = ({ nameOfFriend, imgOfFriend, onSubmitAddFriend, onCHangeN
             Adicionar
         </button>
     </form>
-)
 
 export { FormAddFriend }

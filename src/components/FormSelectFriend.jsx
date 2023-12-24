@@ -2,7 +2,16 @@
 /* eslint-disable react/prop-types */
 import React from "react"
 
-const FormSelectFriend = ({ selectFriend, totalBill, mySend, whoWillPay, onChangeBill, onChangeMySend, onChangeWhoWillPay, onSubmitShareBill }) => (
+const FormSelectFriend = ({
+    selectFriend,
+    totalBill,
+    mySend,
+    whoWillPay,
+    onChangeBill,
+    onChangeMySend,
+    onChangeWhoWillPay,
+    onSubmitShareBill
+}) => selectFriend &&
     <form className="form-split-bill" onSubmit={onSubmitShareBill}>
         <h2>{`Rache a conta com ${selectFriend?.name}`}</h2>
         <label>
@@ -22,6 +31,5 @@ const FormSelectFriend = ({ selectFriend, totalBill, mySend, whoWillPay, onChang
         </label>
         <button className="button">Rachar conta</button>
     </form>
-)
 
 export { FormSelectFriend }

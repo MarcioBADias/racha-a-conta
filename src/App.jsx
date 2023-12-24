@@ -82,22 +82,21 @@ const App = () => {
     <>
       <Logo />
       <main className="app">
-        <div className="sidebar">
+        <aside className="sidebar">
           <ListOfItens
             friends={friends}
             selectFriend={selectFriend}
             onClickFriend={handleClickFriend}
           />
 
-
-          {showFormAddFriend && <FormAddFriend
+          <FormAddFriend
+            showFormAddFriend={showFormAddFriend}
             nameOfFriend={nameOfFriend}
             imgOfFriend={imgOfFriend}
             onCHangeNameOfFriends={handleChangeNameOfFriend}
             onChangeImgOfFriends={handleChangeImgOfFriend}
             onSubmitAddFriend={handleSubmitAddFriend}
           />
-          }
 
           <button
             className={`button ${showFormAddFriend ? 'button-close' : ''}`}
@@ -105,20 +104,18 @@ const App = () => {
           >
             {showFormAddFriend ? 'Fechar' : 'Adicionar Amigo(a)'}
           </button>
-        </div>
+        </aside>
 
-        {selectFriend &&
-          <FormSelectFriend
-            selectFriend={selectFriend}
-            totalBill={totalBill}
-            mySend={mySend}
-            whoWillPay={whoWillPay}
-            onChangeBill={handleChangeBill}
-            onChangeMySend={handleChangeMySend}
-            onChangeWhoWillPay={handleChangeWhoWillPay}
-            onSubmitShareBill={handleSubmitShareBill}
-          />
-        }
+        <FormSelectFriend
+          selectFriend={selectFriend}
+          totalBill={totalBill}
+          mySend={mySend}
+          whoWillPay={whoWillPay}
+          onChangeBill={handleChangeBill}
+          onChangeMySend={handleChangeMySend}
+          onChangeWhoWillPay={handleChangeWhoWillPay}
+          onSubmitShareBill={handleSubmitShareBill}
+        />
       </main>
     </>
   )
