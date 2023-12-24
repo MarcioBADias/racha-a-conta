@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react"
 
 const initialFriends = [
@@ -26,6 +27,38 @@ const getMsgInfo = amount => amount < 0 ?
   amount > 0 ?
     { message: `te devo ${amount} reais`, color: 'green-credit' } :
     { message: 'Estamos quites', color: 'white-neutral' }
+
+const Logo = () => (
+  <header className="header">
+    <img src="logo-racha-conta.png" alt="Logo e Titulo: Racha a conta" />
+  </header>
+)
+
+const ListOfItens = ({ friends, selectFriend, onClickFriend }) => (
+  <ul>
+    {
+      friends.map(friend => {
+        const { color, message } = getMsgInfo(friend.amount)
+        const isSelectFriend = friend.id === selectFriend?.id
+        return (
+          <li key={friend.id}>
+            <img src={friend.img} alt={`Foto de ${friend.name}`} />
+            <h3>{friend.name}</h3>
+            <p className={color}>{message}</p>
+            <button
+              onClick={() => onClickFriend(friend)}
+              className={`button ${isSelectFriend ? 'button-close' : ''}`}
+            >
+              {
+                isSelectFriend ? 'Fechar' : 'Selecionar'
+              }
+            </button>
+          </li>
+        )
+      })
+    }
+  </ul>
+)
 
 const App = () => {
   const [friends, setFriends] = useState(initialFriends)
@@ -81,36 +114,17 @@ const App = () => {
 
   return (
     <>
-      <header className="header">
-        <img src="logo-racha-conta.png" alt="Logo e Titulo: Racha a conta" />
-      </header>
+      <Logo />
       <main className="app">
         <div className="sidebar">
-          <ul>
-            {
-              friends.map(friend => {
-                const { color, message } = getMsgInfo(friend.amount)
-                const isSelectFriend = friend.id === selectFriend?.id
-                return (
-                  <li key={friend.id}>
-                    <img src={friend.img} alt={`Foto de ${friend.name}`} />
-                    <h3>{friend.name}</h3>
-                    <p className={color}>{message}</p>
-                    <button
-                      onClick={() => handleClickFriend(friend)}
-                      className={`button ${isSelectFriend ? 'button-close' : ''}`}
-                    >
-                      {
-                        isSelectFriend ? 'Fechar' : 'Selecionar'
-                      }
-                    </button>
-                  </li>
-                )
-              })
-            }
-          </ul>
+          <ListOfItens
+            friends={friends}
+            selectFriend={selectFriend}
+            onClickFriend={handleClickFriend}
+          />
 
-          {showFormAddFriend && <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
+
+          {showFormAddFriend && <form className="form-split-bill" onSubmit={handleSubmitAddFriend}>
             <label>
               👥 Nome
               <input value={nameOfFriend} onChange={handleChangeNameOfFriend} />
@@ -119,10 +133,7 @@ const App = () => {
               📸 Foto
               <input value={imgOfFriend} onChange={handleChangeImgOfFriend} />
             </label>
-            <button
-              className="button"
-              onClick={handleSubmitAddFriend}
-            >
+            <button className="button" >
               Adicionar
             </button>
           </form>
