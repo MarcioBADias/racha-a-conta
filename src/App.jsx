@@ -1,5 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react"
+import { Logo } from "./components/Logo"
+import { ListOfItens } from "./components/ListOfItens"
+import { FormAddFriend } from "./components/FormAddFriend"
+import { FormSelectFriend } from "./components/FormSelectFriend"
 
 const initialFriends = [
   {
@@ -21,82 +25,6 @@ const initialFriends = [
     img: `/imgs/friends/antonio-48.jpg`
   }
 ]
-
-const getMsgInfo = amount => amount < 0 ?
-  { message: `você deve ${Math.abs(amount)} reais`, color: 'red-debit' } :
-  amount > 0 ?
-    { message: `te devo ${amount} reais`, color: 'green-credit' } :
-    { message: 'Estamos quites', color: 'white-neutral' }
-
-const Logo = () => (
-  <header className="header">
-    <img src="logo-racha-conta.png" alt="Logo e Titulo: Racha a conta" />
-  </header>
-)
-
-const ListOfItens = ({ friends, selectFriend, onClickFriend }) => (
-  <ul>
-    {
-      friends.map(friend => {
-        const { color, message } = getMsgInfo(friend.amount)
-        const isSelectFriend = friend.id === selectFriend?.id
-        return (
-          <li key={friend.id}>
-            <img src={friend.img} alt={`Foto de ${friend.name}`} />
-            <h3>{friend.name}</h3>
-            <p className={color}>{message}</p>
-            <button
-              onClick={() => onClickFriend(friend)}
-              className={`button ${isSelectFriend ? 'button-close' : ''}`}
-            >
-              {
-                isSelectFriend ? 'Fechar' : 'Selecionar'
-              }
-            </button>
-          </li>
-        )
-      })
-    }
-  </ul>
-)
-
-const FormAddFriend = ({ nameOfFriend, imgOfFriend, onSubmitAddFriend, onCHangeNameOfFriends, onChangeImgOfFriends }) => (
-  <form className="form-split-bill" onSubmit={onSubmitAddFriend}>
-    <label>
-      👥 Nome
-      <input value={nameOfFriend} onChange={onCHangeNameOfFriends} />
-    </label>
-    <label>
-      📸 Foto
-      <input value={imgOfFriend} onChange={onChangeImgOfFriends} />
-    </label>
-    <button className="button" >
-      Adicionar
-    </button>
-  </form>
-)
-
-const FormSelectFriend = ({ selectFriend, totalBill, mySend, whoWillPay, onChangeBill, onChangeMySend, onChangeWhoWillPay, onSubmitShareBill }) => (
-  <form className="form-split-bill" onSubmit={onSubmitShareBill}>
-    <h2>{`Rache a conta com ${selectFriend?.name}`}</h2>
-    <label>
-      💰 Valor total
-      <input type="number" value={totalBill} onChange={onChangeBill} />
-    </label>
-    <label>
-      🤸‍♂️ Seus gastos
-      <input type="number" value={mySend} onChange={onChangeMySend} />
-    </label>
-    <label>
-      🤑 Quem vai pagar
-      <select value={whoWillPay} onChange={onChangeWhoWillPay}>
-        <option value="you">Você</option>
-        <option value={selectFriend}>{selectFriend?.name}</option>
-      </select>
-    </label>
-    <button className="button">Rachar conta</button>
-  </form>
-)
 
 const App = () => {
   const [friends, setFriends] = useState(initialFriends)
