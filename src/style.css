@@ -50,6 +50,8 @@ body {
 
 .button-close {
   background-color: #f64f4f;
+  margin-top: 1rem;
+  width: 100%;
 }
 
 .sidebar {
