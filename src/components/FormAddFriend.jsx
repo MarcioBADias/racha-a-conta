@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 
-const FormAddFriend = ({ showFormAddFriend, onSubmitAddFriend }) => {
+const FormAddFriend = ({ onSubmitAddFriend }) => {
 
     const [nameOfFriend, setNameOfFriend] = useState('')
     const [imgOfFriend, setImgOfFriend] = useState('')
@@ -22,7 +22,7 @@ const FormAddFriend = ({ showFormAddFriend, onSubmitAddFriend }) => {
         setNameOfFriend('')
         setImgOfFriend('')
     }
-    return showFormAddFriend &&
+    return (
         <form className="form-split-bill" onSubmit={handleSubmitAddFriend}>
             <label>
                 👥 Nome
@@ -35,6 +35,6 @@ const FormAddFriend = ({ showFormAddFriend, onSubmitAddFriend }) => {
             <button className="button" >
                 Adicionar
             </button>
-        </form>
+        </form>)
 }
 export { FormAddFriend }
