@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const FormSelectFriend = ({
     selectFriend,
@@ -9,6 +9,11 @@ const FormSelectFriend = ({
     const [totalBill, setTotalBill] = useState('')
     const [mySend, setMySend] = useState('')
     const [whoWillPay, setWhoWillPay] = useState('you')
+
+    useEffect(() => {
+        document.title = `${selectFriend.name} foi selecionado(a)`
+        return () => document.title = 'Racha a conta'
+    }, [selectFriend.name])
 
     const handleChangeBill = e => setTotalBill(e.target.value)
     const handleChangeMySend = e => setMySend(e.target.value)
@@ -27,7 +32,7 @@ const FormSelectFriend = ({
         setWhoWillPay('you')
     }
 
-    return selectFriend &&
+    return (
         <form className="form-split-bill" onSubmit={handleSubmitShareBill}>
             <h2>{`Rache a conta com ${selectFriend?.name}`}</h2>
             <label>
@@ -46,6 +51,6 @@ const FormSelectFriend = ({
                 </select>
             </label>
             <button className="button">Rachar conta</button>
-        </form>
+        </form>)
 }
 export { FormSelectFriend }
