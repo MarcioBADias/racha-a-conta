@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react'
-import localforage from 'localforage'
+import { useFriends } from './hooks/useFriends'
 import { Logo } from './components/Logo'
 import { ListOfItens } from './components/ListOfItens'
 import { FormAddFriend } from './components/FormAddFriend'
@@ -8,62 +6,29 @@ import { FormSelectFriend } from './components/FormSelectFriend'
 import { ButtonAddFriend } from './components/ButtonAddFriend'
 
 const App = () => {
-  const [friends, setFriends] = useState([])
-  const [selectFriend, setSelectFriend] = useState(null)
-  const [showFormAddFriend, setShowFormAddFriend] = useState(false)
-
-  useEffect(() => {
-    localforage
-      .setItem('friends', friends)
-      .catch((error) => alert(error.message))
-  }, [friends])
-
-  useEffect(() => {
-    localforage
-      .getItem('friends')
-      .then((data) => {
-        if (data) {
-          setFriends(data)
-        }
-      })
-      .catch((error) => alert(error.message))
-  }, [])
-
-  const handleClickAddFriend = () => setShowFormAddFriend((b) => !b)
-  const handleClickFriend = (friend) =>
-    setSelectFriend((p) => (p?.id === friend.id ? null : friend))
-
-  const handleSubmitShareBill = (friend) => {
-    setFriends((prev) => prev.map((p) => (friend.id === p.id ? friend : p)))
-    setSelectFriend(null)
-  }
-
-  const handleSubmitAddFriend = (friend) => {
-    setFriends((prev) => [...prev, friend])
-    setShowFormAddFriend(false)
-  }
+  const state = useFriends()
   return (
     <>
       <Logo />
       <main className="app">
         <aside className="sidebar">
           <ListOfItens
-            friends={friends}
-            selectFriend={selectFriend}
-            onClickFriend={handleClickFriend}
+            friends={state.friends}
+            selectFriend={state.selectFriend}
+            onClickFriend={state.handleClickFriend}
           />
-          {showFormAddFriend && (
-            <FormAddFriend onSubmitAddFriend={handleSubmitAddFriend} />
+          {state.showFormAddFriend && (
+            <FormAddFriend onSubmitAddFriend={state.handleSubmitAddFriend} />
           )}
           <ButtonAddFriend
-            showFormAddFriend={showFormAddFriend}
-            onClickAddFriend={handleClickAddFriend}
+            showFormAddFriend={state.showFormAddFriend}
+            onClickAddFriend={state.handleClickAddFriend}
           />
         </aside>
-        {selectFriend && (
+        {state.selectFriend && (
           <FormSelectFriend
-            selectFriend={selectFriend}
-            onSubmitShareBill={handleSubmitShareBill}
+            selectFriend={state.selectFriend}
+            onSubmitShareBill={state.handleSubmitShareBill}
           />
         )}
       </main>
