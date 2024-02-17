@@ -1,50 +1,47 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react"
-import { Logo } from "./components/Logo"
-import { ListOfItens } from "./components/ListOfItens"
-import { FormAddFriend } from "./components/FormAddFriend"
-import { FormSelectFriend } from "./components/FormSelectFriend"
-import { ButtonAddFriend } from "./components/ButtonAddFriend"
-
-const initialFriends = [
-  {
-    id: crypto.randomUUID(),
-    name: 'Henrique',
-    amount: -7,
-    img: `/imgs/friends/henrique-48.jpg`
-  },
-  {
-    id: crypto.randomUUID(),
-    name: 'Renata',
-    amount: 20,
-    img: `/imgs/friends/renata-48.jpg`
-  },
-  {
-    id: crypto.randomUUID(),
-    name: 'Antonio',
-    amount: 0,
-    img: `/imgs/friends/antonio-48.jpg`
-  }
-]
+import { useEffect, useState } from 'react'
+import localforage from 'localforage'
+import { Logo } from './components/Logo'
+import { ListOfItens } from './components/ListOfItens'
+import { FormAddFriend } from './components/FormAddFriend'
+import { FormSelectFriend } from './components/FormSelectFriend'
+import { ButtonAddFriend } from './components/ButtonAddFriend'
 
 const App = () => {
-  const [friends, setFriends] = useState(initialFriends)
+  const [friends, setFriends] = useState([])
   const [selectFriend, setSelectFriend] = useState(null)
   const [showFormAddFriend, setShowFormAddFriend] = useState(false)
 
-  const handleClickAddFriend = () => setShowFormAddFriend(b => !b)
-  const handleClickFriend = friend => setSelectFriend(p => p?.id === friend.id ? null : friend)
+  useEffect(() => {
+    localforage
+      .setItem('friends', friends)
+      .catch((error) => alert(error.message))
+  }, [friends])
 
-  const handleSubmitShareBill = friend => {
-    setFriends(prev => prev.map(p => friend.id === p.id ? friend : p))
+  useEffect(() => {
+    localforage
+      .getItem('friends')
+      .then((data) => {
+        if (data) {
+          setFriends(data)
+        }
+      })
+      .catch((error) => alert(error.message))
+  }, [])
+
+  const handleClickAddFriend = () => setShowFormAddFriend((b) => !b)
+  const handleClickFriend = (friend) =>
+    setSelectFriend((p) => (p?.id === friend.id ? null : friend))
+
+  const handleSubmitShareBill = (friend) => {
+    setFriends((prev) => prev.map((p) => (friend.id === p.id ? friend : p)))
     setSelectFriend(null)
   }
 
-  const handleSubmitAddFriend = friend => {
-    setFriends(prev => [...prev, friend])
+  const handleSubmitAddFriend = (friend) => {
+    setFriends((prev) => [...prev, friend])
     setShowFormAddFriend(false)
   }
-
   return (
     <>
       <Logo />
@@ -55,18 +52,20 @@ const App = () => {
             selectFriend={selectFriend}
             onClickFriend={handleClickFriend}
           />
-          {showFormAddFriend && <FormAddFriend
-            onSubmitAddFriend={handleSubmitAddFriend}
-          />}
+          {showFormAddFriend && (
+            <FormAddFriend onSubmitAddFriend={handleSubmitAddFriend} />
+          )}
           <ButtonAddFriend
             showFormAddFriend={showFormAddFriend}
             onClickAddFriend={handleClickAddFriend}
           />
         </aside>
-        {selectFriend && <FormSelectFriend
-          selectFriend={selectFriend}
-          onSubmitShareBill={handleSubmitShareBill}
-        />}
+        {selectFriend && (
+          <FormSelectFriend
+            selectFriend={selectFriend}
+            onSubmitShareBill={handleSubmitShareBill}
+          />
+        )}
       </main>
     </>
   )
