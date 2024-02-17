@@ -1,39 +1,47 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import { Logo } from "./components/Logo";
-import { ListOfItens } from "./components/ListOfItens";
-import { FormAddFriend } from "./components/FormAddFriend";
-import { FormSelectFriend } from "./components/FormSelectFriend";
-import { ButtonAddFriend } from "./components/ButtonAddFriend";
+import { useEffect, useState } from 'react'
+import localforage from 'localforage'
+import { Logo } from './components/Logo'
+import { ListOfItens } from './components/ListOfItens'
+import { FormAddFriend } from './components/FormAddFriend'
+import { FormSelectFriend } from './components/FormSelectFriend'
+import { ButtonAddFriend } from './components/ButtonAddFriend'
 
 const App = () => {
-  const [friends, setFriends] = useState([]);
-  const [selectFriend, setSelectFriend] = useState(null);
-  const [showFormAddFriend, setShowFormAddFriend] = useState(false);
+  const [friends, setFriends] = useState([])
+  const [selectFriend, setSelectFriend] = useState(null)
+  const [showFormAddFriend, setShowFormAddFriend] = useState(false)
 
   useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/MarcioBADias/data-fake/main/initial-friends.json",
-    )
-      .then((r) => r.json())
-      .then((data) => setFriends(data))
-      .catch((error) => alert(error.message));
-  }, [friends]);
+    localforage
+      .setItem('friends', friends)
+      .catch((error) => alert(error.message))
+  }, [friends])
 
-  const handleClickAddFriend = () => setShowFormAddFriend((b) => !b);
+  useEffect(() => {
+    localforage
+      .getItem('friends')
+      .then((data) => {
+        if (data) {
+          setFriends(data)
+        }
+      })
+      .catch((error) => alert(error.message))
+  }, [])
+
+  const handleClickAddFriend = () => setShowFormAddFriend((b) => !b)
   const handleClickFriend = (friend) =>
-    setSelectFriend((p) => (p?.id === friend.id ? null : friend));
+    setSelectFriend((p) => (p?.id === friend.id ? null : friend))
 
   const handleSubmitShareBill = (friend) => {
-    setFriends((prev) => prev.map((p) => (friend.id === p.id ? friend : p)));
-    setSelectFriend(null);
-  };
+    setFriends((prev) => prev.map((p) => (friend.id === p.id ? friend : p)))
+    setSelectFriend(null)
+  }
 
   const handleSubmitAddFriend = (friend) => {
-    setFriends((prev) => [...prev, friend]);
-    setShowFormAddFriend(false);
-  };
-  console.log(friends);
+    setFriends((prev) => [...prev, friend])
+    setShowFormAddFriend(false)
+  }
   return (
     <>
       <Logo />
@@ -60,7 +68,7 @@ const App = () => {
         )}
       </main>
     </>
-  );
-};
+  )
+}
 
-export { App };
+export { App }
